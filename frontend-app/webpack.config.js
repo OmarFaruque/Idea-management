@@ -11,7 +11,7 @@ const webpackConfig = {
     devtool: 'source-map',
 
     entry: {
-        'backend': path.resolve(__dirname, 'src/backend.js'),
+        'idea': path.resolve(__dirname, 'src/idea.js'),
     },
 
     output: {
