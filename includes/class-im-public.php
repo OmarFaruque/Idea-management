@@ -29,7 +29,7 @@ class IM_Public
      * @var     string
      * @access  public
      */
-    public $token;
+    public static $token;
 
     /**
      * The main plugin file.
@@ -56,6 +56,7 @@ class IM_Public
     public function __construct($file = '')
     {
         self::$plugin_path = IM_PATH;
+        self::$token = IM_TOKEN;
         add_shortcode( 'idea-management', array($this, 'idea_management_shortcode_callback') );
     }
 
@@ -69,6 +70,16 @@ class IM_Public
      */
     public function idea_management_shortcode_callback(){
         require_once(self::$plugin_path . '/temp/idea-form.php');
+
+        wp_enqueue_script( self::$token.'_js', plugin_dir_url( IM_Idea::$plugin_file ) . 'assets/js/idea.js', array(), IM_Idea::$version, true );
+        wp_localize_script(
+            self::$token . '_js',
+            self::$token . '_object',
+            array(
+                'api_nonce' => wp_create_nonce('wp_rest'),
+                'root' => rest_url(self::$token . '/v1/')
+            )
+        );
     }
     
 

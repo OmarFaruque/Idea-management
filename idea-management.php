@@ -26,8 +26,11 @@ $im_autoloader->register();
 
 IM_Admin::instance(__FILE__);
 IM_Public::instance(__FILE__);
+IM_Restapi::instance(__FILE__);
 
 class IM_Idea{
+    public static $plugin_file = IM_FILE;
+    public static $version = IM_VERSION;
     public static function init($autoloader = false){
         // Register custom post type for collect idea
 		add_action( 'init', __CLASS__ . '::idea_register_post_types', 6 );
