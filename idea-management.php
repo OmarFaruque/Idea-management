@@ -16,6 +16,7 @@ define('IM_VERSION', '1.0.0');
 define('IM_FILE', __FILE__);
 define('IM_PLUGIN_NAME', 'Idea Management');
 define('IM_INIT_TIMESTAMP', gmdate( 'U' ) );
+define('IM_TAXONOMY', 'idea_type');
 define('IM_PATH', realpath(plugin_dir_path(__FILE__)));
 
 
@@ -31,6 +32,8 @@ IM_Restapi::instance(__FILE__);
 class IM_Idea{
     public static $plugin_file = IM_FILE;
     public static $version = IM_VERSION;
+    public static $token = IM_TOKEN;
+    public static $taxonomy = IM_TAXONOMY;
     public static function init($autoloader = false){
         // Register custom post type for collect idea
 		add_action( 'init', __CLASS__ . '::idea_register_post_types', 6 );
@@ -48,7 +51,7 @@ class IM_Idea{
      * @since   1.0
      */
     public static function idea_register_custom_taxonomy(){
-        register_taxonomy('idea_type', ['idea'], [
+        register_taxonomy(self::$taxonomy, ['idea'], [
             'label' => __('Idea Type', 'idea-management'),
             'hierarchical' => true,
             'rewrite' => ['slug' => 'idea-type'],
@@ -80,7 +83,7 @@ class IM_Idea{
      * @since   1.0
      */
     public static function idea_register_post_types(){
-        register_post_type('idea', [
+        register_post_type(self::$token, [
             'label' => __('Idea', 'idea-management'),
             'public' => true,
             'menu_position' => 5,

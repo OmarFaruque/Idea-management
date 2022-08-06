@@ -71,7 +71,9 @@ class IM_Public
     public function idea_management_shortcode_callback(){
         require_once(self::$plugin_path . '/temp/idea-form.php');
 
+        wp_enqueue_style( self::$token.'_css', plugin_dir_url( IM_Idea::$plugin_file ) . 'assets/css/idea.css', array(), IM_Idea::$version, 'all' );
         wp_enqueue_script( self::$token.'_js', plugin_dir_url( IM_Idea::$plugin_file ) . 'assets/js/idea.js', array(), IM_Idea::$version, true );
+        
         wp_localize_script(
             self::$token . '_js',
             self::$token . '_object',

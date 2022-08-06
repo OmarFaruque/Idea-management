@@ -87,7 +87,7 @@ module: {
                     loader: 'css-loader',
                     options: {
                         modules: {
-                            localIdentName: 'acotrs_[local][hash:base64:5]',
+                            localIdentName: 'im_[local][hash:base64:5]',
                         },
 
                     }

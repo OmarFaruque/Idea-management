@@ -55,44 +55,6 @@ class IM_Restapi
         add_action(
             'rest_api_init',
             function () {
-
-                //Delete shipping option from custom page
-                register_rest_route(
-                    $this->token . '/v1',
-                    '/delete_shipping_option/',
-                    array(
-                        'methods' => 'POST',
-                        'callback' => array($this, 'acotrs_delete_shipping_callback'),
-                        'permission_callback' => array($this, 'getPermission'),
-                    )
-                );
-
-
-
-                //Delete shipping multiple option
-                register_rest_route(
-                    $this->token . '/v1',
-                    '/delete_methods/',
-                    array(
-                        'methods' => 'POST',
-                        'callback' => array($this, 'acotrs_delete_multiple_shipping_callback'),
-                        'permission_callback' => array($this, 'getPermission'),
-                    )
-                );
-
-                
-                // Licenced Info
-                register_rest_route(
-                    $this->token . '/v1',
-                    '/initial_config/',
-                    array(
-                        'methods' => 'GET',
-                        'callback' => array($this, 'acotrs_get_initial_config'),
-                        'permission_callback' => array($this, 'getPermission'),
-                    )
-                );
-
-
                 register_rest_route(
                     $this->token . '/v1',
                     '/getconfig/',
@@ -102,48 +64,55 @@ class IM_Restapi
                         'permission_callback' => array($this, 'getPermission'),
                     )
                 );
+                
 
-
-                // Update subscript settings to option
+                //Create new idea
                 register_rest_route(
                     $this->token . '/v1',
-                    '/updatedata/',
+                    '/create/',
                     array(
                         'methods' => 'POST',
-                        'callback' => array($this, 'awc_update_config'),
-                        'permission_callback' => array($this, 'getPermission'),
-                    )
-                );
-
-                register_rest_route(
-                    $this->token . '/v1',
-                    '/subscription-status-action/',
-                    array(
-                        'methods' => 'POST',
-                        'callback' => array($this, 'awc_subscription_status_action_callback'),
-                        'permission_callback' => array($this, 'getPermission'),
-                    )
-                );
-
-                register_rest_route(
-                    $this->token . '/v1',
-                    '/search-subscriptions/',
-                    array(
-                        'methods' => 'POST',
-                        'callback' => array($this, 'awc_subscription_search'),
+                        'callback' => array($this, 'mi_create_idea'),
                         'permission_callback' => array($this, 'getPermission'),
                     )
                 );
             }
-        );
-
-        
-        
+        ); 
     }
 
 
     
 
+
+    /**
+     * Create new idea on form submit from frontend
+     * @access  public 
+     * @since   1.0
+     * @param   array
+     */
+    public function mi_create_idea($post){
+        $return_array = array();
+        // $title = $post['title'];
+        // $content = $post['content'];
+        // $idea_type = $post['idea_type'];
+
+        // insert the post and set the category
+        // $post_id = wp_insert_post(array (
+        //     'post_type' => IM_Idea::$token,
+        //     'post_title' => $title,
+        //     'post_content' => $content,
+        //     'post_status' => 'pending'
+        // ));
+
+        // if($post_id){
+        //     wp_set_post_terms( $post_id, array((int) $idea_type ), IM_Idea::$taxonomy, false );
+        // }
+        
+        $return_array['msg'] = 'success';
+        $return_array['title'] = $post['title'];
+        $return_array['file'] = $post['file'];
+        return new WP_REST_Response($return_array, 200);
+    }
 
     /**
      * @access  public 
@@ -152,7 +121,13 @@ class IM_Restapi
     public function mi_getconfig()
     {
 
-       $return_array = array('thisismymessage');
+       $return_array = array();
+
+       $taxonomies = get_terms( array(
+            'taxonomy' => 'idea_type',
+            'hide_empty' => false
+        ) );
+        $return_array['idea_type'] = $taxonomies;
 
         return new WP_REST_Response($return_array, 200);
     }
@@ -180,7 +155,7 @@ class IM_Restapi
      **/
     public function getPermission()
     {
-        if (current_user_can('administrator') || current_user_can('manage_woocommerce')) {
+        if (is_user_logged_in(  )) {
             return true;
         } else {
             return false;
