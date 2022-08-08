@@ -32,6 +32,12 @@ class IM_Admin
     public $token;
 
     /**
+     * @access  public
+     * @return  path
+     */
+    public static $plugin_path;
+
+    /**
      * The main plugin file.
      *
      * @var     string
@@ -49,9 +55,30 @@ class IM_Admin
      */
     public function __construct($file = '')
     {
-
+        self::$plugin_path = IM_PATH;
+        add_action( "add_meta_boxes", array( $this, "im_add_mata_box" ) );
     }
 
+    /**
+     * Add meta box to idea post type for show attachment information 
+     * @param   null 
+     * @since   1.0
+     * @access  public
+     */
+    public function im_add_mata_box(){
+        add_meta_box( 'idea_attachment', __( 'Attachment','idea-management' ), array($this, 'im_attachment_metabox_callback'), 'idea', 'side' );
+    }
+
+
+    /**
+     * Add meta box to idea post type for show attachment information 
+     * @param   post_id 
+     * @since   1.0
+     * @access  public
+     */
+    public function im_attachment_metabox_callback($post){
+        require_once(self::$plugin_path . '/temp/admin-attachment.php');
+    }
 
     /**
      * Ensures only one instance of Class is loaded or can be loaded.

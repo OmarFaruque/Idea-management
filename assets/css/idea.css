@@ -2,7 +2,6 @@
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/sass-loader/dist/cjs.js!./node_modules/sass-resources-loader/lib/loader.js??ruleSet[1].rules[1].use[3]!./src/idea.scss ***!
   \*******************************************************************************************************************************************************************************************************************/
 .im_rowIe5G9 {
-  display: flex;
   margin: 10px 0;
 }
 .im_rowIe5G9 input[type=text],
@@ -22,6 +21,35 @@
 }
 .im_rowIe5G9 input[type=submit] {
   margin-top: 30px;
+}
+
+.im_list_rowpVjIf {
+  background-color: rgba(175, 175, 175, 0.3294117647);
+  display: flex;
+  margin: 10px 0px;
+}
+.im_list_rowpVjIf > div:first-child {
+  flex: 9;
+  padding: 10px;
+}
+.im_list_rowpVjIf > div:last-child {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+.im_list_rowpVjIf > div:last-child:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.im_list_rowpVjIf > div:last-child a {
+  text-decoration: none;
+  line-height: initial;
+  color: darkslategray;
+}
+.im_list_rowpVjIf > div:last-child a span {
+  margin-right: 8px;
 }
 
 /*# sourceMappingURL=idea.css.map*/

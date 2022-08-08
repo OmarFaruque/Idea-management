@@ -9,7 +9,6 @@
 
 
 .row{
-  display: flex;
   margin: 10px 0;
   input[type="text"],
   select,
@@ -28,5 +27,36 @@
   }
   input[type="submit"]{
     margin-top: 30px;
+  }
+}
+
+.list_row{
+  background-color: grayscale($color: #b1adad54);
+  display: flex;
+  margin: 10px 0px;
+  >div{
+    &:first-child{
+      flex: 9;
+      padding: 10px;
+    }
+    &:last-child{
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      background-color: rgba(0,0,0,0.2);
+      padding: 10px;
+      &:hover{
+        background-color: rgba(0,0,0,0.3);
+      }
+      a{
+        text-decoration: none;
+        line-height: initial;
+        color: darkslategray;
+        span{
+          margin-right: 8px;
+        }
+      }
+    }
   }
 }

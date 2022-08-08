@@ -12,13 +12,16 @@ let fetchWP = new FetchWP({
 createApp({
     data() {
       return {
-        message: 'Hello Vue!', 
+        message: '', 
         idea_types: [], 
         style: style, 
         idea_type: '', 
         title: '', 
         content: '', 
-        file: ''
+        file: '', 
+        listing: true, 
+        ideas: [], 
+        idea_url: window.idea_object.homepage + window.idea_object.cpost
       }
     },
 
@@ -33,6 +36,7 @@ createApp({
                 (json) => {
                     console.log('json: ', json)
                     this.idea_types = json.idea_type
+                    this.ideas = json.ideas
                 })
                 .catch(function(error) {
                     console.log('error', error);
@@ -44,6 +48,9 @@ createApp({
         
       }, 
 
+      backtolisting(){
+        console.log('back to listing');
+      },
 
       formSubmit(e=false){
         this.title = this.$refs.title.value
@@ -53,49 +60,25 @@ createApp({
 
         const formData = new FormData();
         
+        formData.append('title', this.title);
+        formData.append('idea_type', this.idea_type);
+        formData.append('content', this.content);
         formData.append('file', this.file, this.file.name);
 
-        let data = {
-          title: this.title, 
-          idea_type: this.idea_type, 
-          content: this.content, 
-          // file: formData
+        let headers = {
+          'Content-Type': 'multipart/form-data',
+          'X-WP-Nonce': window.idea_object.api_nonce,
         }
-
-        // console.log('form data: ', data)
-        // console.log('filename: ', this.file.name)
-        // fetchWP.post('create/', data)
-        //     .then(
-        //         (json) => {
-        //             console.log('json: ', json)
-        //         })
-        //         .catch(function(error) {
-        //             console.log('error', error);
-        //         });
-
-
-
-
-
-        axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
-        .then(response => ( console.log('res: ', response) ))
-   
-            // try {
-            //   let response = this.$axios.post('create/', data, {
-            //     headers: {
-            //       'Content-Type': 'multipart/form-data; boundary=' + formData._boundary
-            //     }
-            //   })
-            //   console.log('response : ', response)
-            //   if (response.status === 200 && response.data.status === 'success') {
-            //     console.log(this.response)
-            //   }
-            // } catch (e) {
-            //  console.log(e)
-            // }
-        
         
 
+        axios.post(window.idea_object.root + 'create/', formData, {headers: headers})
+        .then(
+          (response) => {
+            console.log('response: ', response)
+          })
+          .catch(function(error){
+            console.log('error: ', error)
+          })
 
       }
     }

@@ -88,7 +88,7 @@ class IM_Idea{
             'public' => true,
             'menu_position' => 5,
             'menu_icon' => 'dashicons-book',
-            'supports' => ['title', 'editor', 'thumbnail', 'author', 'revisions', 'comments'],
+            'supports' => ['title', 'editor', 'author', 'revisions', 'comments'],
             'show_in_rest' => true,
             'rewrite' => ['slug' => 'idea'],
             'taxonomies' => ['idea_type'],

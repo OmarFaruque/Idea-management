@@ -12,6 +12,7 @@ const webpackConfig = {
 
     entry: {
         'idea': path.resolve(__dirname, 'src/idea.js'),
+        'comment': path.resolve(__dirname, 'src/comment.js'),
     },
 
     output: {

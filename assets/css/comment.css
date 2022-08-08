@@ -1,0 +1,146 @@
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/sass-loader/dist/cjs.js!./node_modules/sass-resources-loader/lib/loader.js??ruleSet[1].rules[1].use[3]!./src/comment.scss ***!
+  \**********************************************************************************************************************************************************************************************************************/
+.im_rowFVtLq {
+  margin: 10px 0;
+}
+.im_rowFVtLq input[type=text],
+.im_rowFVtLq select,
+.im_rowFVtLq textarea {
+  width: 100%;
+  box-shadow: 0 0 5px #bbb;
+  -o-box-shadow: 0 0 5px #bbb;
+  -moz-box-shadow: 0 0 5px #bbb;
+  -webkit-box-shadow: 0 0 5px #bbb;
+  border-radius: 5px;
+}
+.im_rowFVtLq select {
+  padding: 10px;
+  background-color: #f2f2f2;
+  border-color: #aaa;
+}
+.im_rowFVtLq input[type=submit] {
+  margin-top: 30px;
+}
+
+.im_list_rowCAGri {
+  background-color: rgba(175, 175, 175, 0.3294117647);
+  display: flex;
+  margin: 10px 0px;
+}
+.im_list_rowCAGri > div:first-child {
+  flex: 9;
+  padding: 10px;
+}
+.im_list_rowCAGri > div:last-child {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+.im_list_rowCAGri > div:last-child:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.im_list_rowCAGri > div:last-child a {
+  text-decoration: none;
+  line-height: initial;
+  color: darkslategray;
+}
+.im_list_rowCAGri > div:last-child a span {
+  margin-right: 8px;
+}
+
+#comments {
+  position: relative;
+}
+#comments .im_loaderGvqPy {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+#comments .im_loaderGvqPy > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: rgba(169, 169, 169, 0.4196078431);
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  top: 0;
+}
+#comments .im_loaderGvqPy > div img {
+  width: 100px;
+}
+
+.im_commentlistsycmfG .im_rowFVtLq {
+  margin: 10px 0;
+  display: flex;
+  background-color: antiquewhite;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:first-child {
+  flex: 2;
+  text-align: center;
+  background-color: aliceblue;
+  padding: 20px;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:first-child img {
+  max-width: 100%;
+  border-radius: 100px;
+  width: 60px;
+  margin: 0 auto;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:first-child p {
+  margin: 0;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child {
+  flex: 10;
+  padding: 20px;
+  position: relative;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry {
+  width: 52px;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ {
+  width: 25px;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry,
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  cursor: pointer;
+  height: 25px;
+  opacity: 0.5;
+  display: flex;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry:hover,
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ:hover {
+  opacity: 1;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry span,
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ span {
+  height: 100%;
+  display: block;
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry span.im_nagativevoteVgHMq,
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ span.im_nagativevoteVgHMq {
+  transform: rotate(180deg);
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry span:first-child,
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ span:first-child {
+  text-align: center;
+  width: calc(100% - 25px);
+}
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_nvotegOOry span:last-child,
+.im_commentlistsycmfG .im_rowFVtLq > div:last-child .im_voteUD0XJ span:last-child {
+  background-position: center;
+  background-size: contain;
+  width: 25px;
+}
+
+/*# sourceMappingURL=comment.css.map*/
