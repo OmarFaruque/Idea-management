@@ -29,10 +29,10 @@
   margin: 10px 0px;
 }
 .im_list_rowpVjIf > div:first-child {
-  flex: 9;
+  flex: 10;
   padding: 10px;
 }
-.im_list_rowpVjIf > div:last-child {
+.im_list_rowpVjIf > div.im_detailsLeMnF {
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -40,16 +40,82 @@
   background-color: rgba(0, 0, 0, 0.2);
   padding: 10px;
 }
-.im_list_rowpVjIf > div:last-child:hover {
+.im_list_rowpVjIf > div.im_detailsLeMnF:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
-.im_list_rowpVjIf > div:last-child a {
+.im_list_rowpVjIf > div.im_detailsLeMnF a {
   text-decoration: none;
   line-height: initial;
   color: darkslategray;
 }
-.im_list_rowpVjIf > div:last-child a span {
+.im_list_rowpVjIf > div.im_detailsLeMnF a span {
   margin-right: 8px;
+}
+.im_list_rowpVjIf > div.im_nvoteF1l9J, .im_list_rowpVjIf > div.im_votedHrLy {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.im_list_rowpVjIf > div.im_nvoteF1l9J:hover, .im_list_rowpVjIf > div.im_votedHrLy:hover {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+.im_list_rowpVjIf > div.im_nvoteF1l9J span, .im_list_rowpVjIf > div.im_votedHrLy span {
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.im_list_rowpVjIf > div.im_nvoteF1l9J span.im_votespankY7OT, .im_list_rowpVjIf > div.im_votedHrLy span.im_votespankY7OT {
+  display: block;
+}
+.im_list_rowpVjIf > div.im_nvoteF1l9J span.im_nagativevoteqiUtq, .im_list_rowpVjIf > div.im_votedHrLy span.im_nagativevoteqiUtq {
+  display: block;
+  transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+}
+.im_list_rowpVjIf > div.im_nvoteF1l9J span.im_vote_counteBRN7, .im_list_rowpVjIf > div.im_votedHrLy span.im_vote_counteBRN7 {
+  width: 15px;
+}
+
+.im_addnewIdeawHUvG {
+  display: inline-block;
+  margin-top: 15px;
+}
+
+#im_form {
+  position: relative;
+}
+#im_form .im_filterwrapj337e > div {
+  display: flex;
+}
+#im_form .im_filterwrapj337e > div .im_frowIHOeD {
+  display: block;
+}
+#im_form .im_loaderQ_CJf {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+#im_form .im_loaderQ_CJf > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: rgba(169, 169, 169, 0.4196078431);
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  top: 0;
+}
+#im_form .im_loaderQ_CJf > div img {
+  width: 100px;
 }
 
 /*# sourceMappingURL=idea.css.map*/

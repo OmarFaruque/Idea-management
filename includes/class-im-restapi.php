@@ -59,7 +59,7 @@ class IM_Restapi
                     $this->token . '/v1',
                     '/getconfig/',
                     array(
-                        'methods' => 'GET',
+                        'methods' => 'POST',
                         'callback' => array($this, 'mi_getconfig'),
                         'permission_callback' => array($this, 'getPermission'),
                     )
@@ -111,7 +111,17 @@ class IM_Restapi
                         'permission_callback' => array($this, 'getPermission'),
                     )
                 );
-                
+
+                //Idea vote process
+                register_rest_route(
+                    $this->token . '/v1',
+                    '/idea_vote/',
+                    array(
+                        'methods' => 'POST',
+                        'callback' => array($this, 'mi_post_idea_votes'),
+                        'permission_callback' => array($this, 'getPermission'),
+                    )
+                );
 
             }
         ); 
@@ -209,6 +219,65 @@ class IM_Restapi
         return new WP_REST_Response($return_array, 200);
     }
 
+
+
+
+
+    /**
+     * Vote on each comment  
+     * @access  public 
+     * @param   post_as_array
+     * @return  all_comments
+     */
+    public function mi_post_idea_votes($data){
+        $return_array = array();
+        $post_id = (int) $data['post_id']; 
+        $v_type = $data['v_type'];
+        $category = $data['category'];
+
+
+
+        // Return a single meta value with the key 'vote' from a defined post object.
+        $voted_users = get_post_meta( $post_id, 'idea_voted_users', true ) && is_array(get_post_meta( $post_id, 'idea_voted_users', true )) ? get_post_meta( $post_id, 'idea_voted_users', true ) : array();
+        
+        
+        if(!in_array(get_current_user_id(  ), $voted_users)) {
+            $vote = get_post_meta( $post_id, 'vote', true ) ? get_post_meta( $post_id, 'vote', true ) : 0;
+            $new_vote = $vote + 1;  
+            update_post_meta( $post_id, 'vote', $new_vote );
+
+            if(!in_array(get_current_user_id(  ), $voted_users))
+                array_push($voted_users, get_current_user_id(  ));
+
+            update_post_meta( $post_id, 'idea_voted_users', $voted_users );
+        }
+
+        // Nagative vote / cancel vote
+        if(in_array(get_current_user_id(  ), $voted_users) && $v_type == 'nagative'){
+            $vote = get_post_meta( $post_id, 'vote', true ) ? get_post_meta( $post_id, 'vote', true ) : 0;
+            $new_vote = $vote - 1;  
+            update_post_meta( $post_id, 'vote', $new_vote );
+
+            if (($key = array_search(get_current_user_id(  ), $voted_users)) !== false) {
+                unset($voted_users[$key]);
+            }
+            
+            update_post_meta( $post_id, 'idea_voted_users', $voted_users );
+        }
+        
+
+        
+        // Get new data after update
+        $n_voted_users = get_post_meta( $post_id, 'idea_voted_users', true ) && is_array(get_post_meta( $post_id, 'idea_voted_users', true )) ? get_post_meta( $post_id, 'idea_voted_users', true ) : array();
+        
+        
+        
+        $return_array['user_vote_status'] = in_array(get_current_user_id(  ), $n_voted_users);
+        $return_array['ideas'] = $this->im_get_ideas($category);
+
+        return new WP_REST_Response($return_array, 200);
+    }
+
     /**
      * Insert idea comment to DB 
      * @access  public 
@@ -221,6 +290,7 @@ class IM_Restapi
         
         $comment_id = $this->im_wp_insert_comment($data['comment'], $data['post_id']);
         if($comment_id){
+            update_comment_meta( $comment_id, 'vote', 0 );
             $comments = $this->im_get_post_comments($data['post_id']);
             $return_array['comments'] = $comments;
         }
@@ -272,8 +342,15 @@ class IM_Restapi
      * @param   post_id
      * @return  comments_as_array
      */
-    protected function im_get_post_comments($post_id){
-        $comments = get_comments( array('post_id' => (int) $post_id) );
+    protected function im_get_post_comments($post_id, $comment_filter = 'recent'){
+        $args = array('post_id' => (int) $post_id);
+        if($comment_filter != 'recent'){
+            $args['orderby'] = 'meta_value_num';
+            $args['meta_key'] = 'vote';
+            $args['order'] = 'DESC';
+        }
+
+        $comments = get_comments( $args );
 
         $comments = array_map(function($v){
             $v->profile_img = esc_url( get_avatar_url( $v->user_id ) );
@@ -294,7 +371,7 @@ class IM_Restapi
         $return_array = array();
         $post_id = (int) $post['post_id'];
         
-        $comments = $this->im_get_post_comments($post['post_id']);
+        $comments = $this->im_get_post_comments($post['post_id'], $post['comment_filter']);
         
         $voted_users = get_post_meta( $post_id, 'voted_users', true ) ? get_post_meta( $post_id, 'voted_users', true ) : array();
         $previous_vote_id = isset($voted_users[get_current_user_id(  )]) ? $voted_users[get_current_user_id(  )] : false;
@@ -308,6 +385,7 @@ class IM_Restapi
         $return_array['comments'] = $comments;
         $return_array['user_vote_status'] = $user_vote_status;
         $return_array['p_vote_id'] = $previous_vote_id;
+        $return_array['comment_filter'] = $post['comment_filter'];
 
 
         return new WP_REST_Response($return_array, 200);
@@ -368,6 +446,7 @@ class IM_Restapi
             $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
             wp_update_attachment_metadata( $attach_id, $attach_data );
             update_post_meta( $post_id, 'attachment', $attach_id );
+            update_post_meta( $post_id, 'vote', 0 );
 
             $return_array['msg'] = 'success';
         }
@@ -380,28 +459,63 @@ class IM_Restapi
      * @access  public 
      * @return Single Shipping mehod configration as json
      */
-    public function mi_getconfig()
+    public function mi_getconfig($data)
     {
 
-       $return_array = array();
+        $category = $data['category'];
 
-       $taxonomies = get_terms( array(
+        $return_array = array();
+
+        $taxonomies = get_terms( array(
             'taxonomy' => 'idea_type',
             'hide_empty' => false
         ) );
 
         // All ideas
-        $args = array(
-            'numberposts' => -1,
-            'post_type'   => 'idea'
-          );
-           
-        $list_ideas = get_posts( $args );
+        $list_ideas = $this->im_get_ideas($category);
 
         $return_array['idea_type'] = $taxonomies;
         $return_array['ideas'] = $list_ideas;
+        $return_array['cat'] = $category;
 
         return new WP_REST_Response($return_array, 200);
+    }
+
+
+    /**
+     * Get ideas from DB
+     * @access  protected 
+     * @param   category_id
+     * @return  post_array
+     * @since   1.0
+     */
+    protected function im_get_ideas($category = false){
+        $args = array(
+            'numberposts' => -1,
+            'post_type'   => IM_Idea::$token
+        );
+
+        if(isset($category) && !empty($category)){
+            $args['tax_query'] = array(
+                array(
+                  'taxonomy' => 'idea_type',
+                  'field' => 'term_id', 
+                  'terms' => (int) $category, /// Where term_id of Term 1 is "1".
+                  'include_children' => true
+                )
+            );
+        }
+           
+        $list_ideas = get_posts( $args );
+
+        $list_ideas = array_map(function($v){
+            $idea_voted_users = get_post_meta( $v->ID, 'idea_voted_users', true ) ? get_post_meta( $v->ID, 'idea_voted_users', true ) : array();
+            $v->user_vote_status = in_array(get_current_user_id(  ), $idea_voted_users);
+            $v->vote_count = get_post_meta( $v->ID, 'vote', true ) ? get_post_meta( $v->ID, 'vote', true ) : 0;
+            return $v;
+        }, $list_ideas);
+
+        return $list_ideas;
     }
 
     /**

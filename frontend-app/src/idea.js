@@ -21,7 +21,11 @@ createApp({
         file: '', 
         listing: true, 
         ideas: [], 
-        idea_url: window.idea_object.homepage + window.idea_object.cpost
+        idea_url: window.idea_object.homepage + window.idea_object.cpost, 
+        list_by_category: '', 
+        loader: false, 
+        user_vote_status: false, 
+        idea_filter: 'top_rated'
       }
     },
 
@@ -29,14 +33,57 @@ createApp({
       this.fetchData()
     }, 
     methods: {
-      fetchData() {
 
-        fetchWP.get('getconfig/')
+      //Idea vote process
+      voteprocess(id, v_type){
+        console.log('idis: ', id)
+        this.loader = true
+        let data = {
+          post_id: id, 
+          v_type: v_type, 
+          category: this.list_by_category
+        }
+
+        fetchWP.post('idea_vote/', data)
+            .then(
+                (json) => { 
+                  this.ideas = json.ideas
+                  this.loader = false
+                })
+                .catch(function(error) {
+                    console.log('error', error);
+                });
+
+      },
+      // List by category filter
+      listByCategory(){
+        this.list_by_category = this.$refs.list_by_category.value 
+        this.fetchData()
+      },
+
+      //Go to form page or back to listing
+      gotoNewIdeaForm(){
+        this.listing = this.listing ? false : true
+      },
+
+      // Filter by status 
+      ideaFilter(){
+        this.idea_filter = this.$refs.idea_filter.value
+        this.fetchData();
+      },
+
+      fetchData() {
+        this.loader = true
+        let data = {
+          category: this.list_by_category
+        }
+        fetchWP.post('getconfig/', data)
             .then(
                 (json) => {
                     console.log('json: ', json)
                     this.idea_types = json.idea_type
                     this.ideas = json.ideas
+                    this.loader = false
                 })
                 .catch(function(error) {
                     console.log('error', error);
@@ -48,9 +95,6 @@ createApp({
         
       }, 
 
-      backtolisting(){
-        console.log('back to listing');
-      },
 
       formSubmit(e=false){
         this.title = this.$refs.title.value

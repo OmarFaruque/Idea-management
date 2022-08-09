@@ -69,7 +69,6 @@ createApp({
         fetchWP.post('comment_vote/', data)
             .then(
                 (json) => { 
-                  console.log('comment vote: ', json)
                   this.comments = json.comments
                   this.user_vote_status = json.user_vote_status
                   this.p_vote_id = json.p_vote_id

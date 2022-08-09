@@ -1,3 +1,5 @@
 # exclude node_modules 
 /app/node_modules
+/frontend-app/node_modules
+/backend-app/node_modules
 .env

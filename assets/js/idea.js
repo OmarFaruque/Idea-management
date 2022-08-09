@@ -19564,7 +19564,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"row":"im_rowIe5G9","list_row":"im_list_rowpVjIf"});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"row":"im_rowIe5G9","list_row":"im_list_rowpVjIf","details":"im_detailsLeMnF","nvote":"im_nvoteF1l9J","vote":"im_votedHrLy","votespan":"im_votespankY7OT","nagativevote":"im_nagativevoteqiUtq","vote_count":"im_vote_counteBRN7","addnewIdea":"im_addnewIdeawHUvG","filterwrap":"im_filterwrapj337e","frow":"im_frowIHOeD","loader":"im_loaderQ_CJf"});
 
 /***/ }),
 
@@ -19963,28 +19963,66 @@ var fetchWP = new _utils_fetchWP__WEBPACK_IMPORTED_MODULE_2__["default"]({
       file: '',
       listing: true,
       ideas: [],
-      idea_url: window.idea_object.homepage + window.idea_object.cpost
+      idea_url: window.idea_object.homepage + window.idea_object.cpost,
+      list_by_category: '',
+      loader: false,
+      user_vote_status: false,
+      idea_filter: 'top_rated'
     };
   },
   created: function created() {
     this.fetchData();
   },
   methods: {
-    fetchData: function fetchData() {
+    //Idea vote process
+    voteprocess: function voteprocess(id, v_type) {
       var _this = this;
 
-      fetchWP.get('getconfig/').then(function (json) {
-        console.log('json: ', json);
-        _this.idea_types = json.idea_type;
+      console.log('idis: ', id);
+      this.loader = true;
+      var data = {
+        post_id: id,
+        v_type: v_type,
+        category: this.list_by_category
+      };
+      fetchWP.post('idea_vote/', data).then(function (json) {
         _this.ideas = json.ideas;
+        _this.loader = false;
+      })["catch"](function (error) {
+        console.log('error', error);
+      });
+    },
+    // List by category filter
+    listByCategory: function listByCategory() {
+      this.list_by_category = this.$refs.list_by_category.value;
+      this.fetchData();
+    },
+    //Go to form page or back to listing
+    gotoNewIdeaForm: function gotoNewIdeaForm() {
+      this.listing = this.listing ? false : true;
+    },
+    // Filter by status 
+    ideaFilter: function ideaFilter() {
+      this.idea_filter = this.$refs.idea_filter.value;
+      this.fetchData();
+    },
+    fetchData: function fetchData() {
+      var _this2 = this;
+
+      this.loader = true;
+      var data = {
+        category: this.list_by_category
+      };
+      fetchWP.post('getconfig/', data).then(function (json) {
+        console.log('json: ', json);
+        _this2.idea_types = json.idea_type;
+        _this2.ideas = json.ideas;
+        _this2.loader = false;
       })["catch"](function (error) {
         console.log('error', error);
       });
     },
     handleFileUpload: function handleFileUpload() {},
-    backtolisting: function backtolisting() {
-      console.log('back to listing');
-    },
     formSubmit: function formSubmit() {
       var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       this.title = this.$refs.title.value;

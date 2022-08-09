@@ -17505,7 +17505,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"row":"im_rowFVtLq","list_row":"im_list_rowCAGri","loader":"im_loaderGvqPy","commentlists":"im_commentlistsycmfG","nvote":"im_nvotegOOry","vote":"im_voteUD0XJ","nagativevote":"im_nagativevoteVgHMq"});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"row":"im_rowFVtLq","list_row":"im_list_rowCAGri","details":"im_detailsHn0ez","nvote":"im_nvotegOOry","vote":"im_voteUD0XJ","votespan":"im_votespanMHVeJ","nagativevote":"im_nagativevoteVgHMq","vote_count":"im_vote_count_PUj1","loader":"im_loaderGvqPy","commentlists":"im_commentlistsycmfG"});
 
 /***/ }),
 
@@ -17878,7 +17878,6 @@ var fetchWP = new _utils_fetchWP__WEBPACK_IMPORTED_MODULE_2__["default"]({
         v_type: v_type
       };
       fetchWP.post('comment_vote/', data).then(function (json) {
-        console.log('comment vote: ', json);
         _this2.comments = json.comments;
         _this2.user_vote_status = json.user_vote_status;
         _this2.p_vote_id = json.p_vote_id;

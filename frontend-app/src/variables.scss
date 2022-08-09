@@ -36,10 +36,11 @@
   margin: 10px 0px;
   >div{
     &:first-child{
-      flex: 9;
+      flex: 10;
       padding: 10px;
     }
-    &:last-child{
+    &.details
+    {
       flex: 1;
       align-items: center;
       justify-content: center;
@@ -55,6 +56,37 @@
         color: darkslategray;
         span{
           margin-right: 8px;
+        }
+      }
+    }
+    &.nvote,
+    &.vote{
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      &:hover{
+        background-color: rgba(0,0,0,0.25);
+      }
+      span{
+        width: 25px;
+        height: 25px;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        &.votespan{
+          display: block;
+        }
+        &.nagativevote{
+          display: block;
+          transform: rotate(180deg);
+          -o-transform: rotate(180deg);
+          -webkit-transform: rotate(180deg);
+          -moz-transform: rotate(180deg);
+        }
+        &.vote_count{
+          width: 15px;
         }
       }
     }

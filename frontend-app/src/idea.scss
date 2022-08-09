@@ -1,0 +1,38 @@
+.addnewIdea{
+    display: inline-block;
+    margin-top: 15px;
+}
+
+:global(#im_form){
+    position: relative;
+    .filterwrap{
+      >div{
+        display: flex;
+        .frow{
+          display: block;
+        }
+      }
+    }
+    .loader{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+     >div{
+        position:absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        background-color: #a9a9a96b;
+        align-items: center;
+        justify-content: center;
+        left: 0;
+        top: 0;
+        img{
+          width: 100px;
+        }
+     }
+    }
+  }
+  
