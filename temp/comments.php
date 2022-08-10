@@ -4,8 +4,9 @@
             <img src="<?php echo esc_url( plugin_dir_url( IM_Idea::$plugin_file ) . 'assets/img/loader.svg' ); ?>" alt="<?php _e('loader', 'idea-management'); ?>">
         </div>
     </div>
+
     <div :class="style.commentlists">
-        <div :class="filter_row">
+        <div v-if="comments.length > 0" :class="filter_row">
             <select v-on:change="commentFilter()" name="comment_filter" id="comment_filter" ref="comment_filter">
                 <option value="recent"><?php _e('Most Recent', 'idea-management'); ?></option>
                 <option value="top_rated"><?php _e('Top Tated', 'idea-management'); ?></option>

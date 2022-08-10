@@ -126,37 +126,8 @@ class IM_Restapi
             }
         ); 
 
-
-        add_action( 'wp_head', array($this, 'testF') );
     }
 
-
-    public function testF(){
-        // $comments = get_comments( array('post_id' => 3252) );
-        $post_id = 3252;
-        $voted_users = get_post_meta( $post_id, 'voted_users', true ) && is_array(get_post_meta( $post_id, 'voted_users', true )) ? get_post_meta( $post_id, 'voted_users', true ) : array();
-
-        echo 'typeof ' . gettype($voted_users) . '<br/>';
-        // $comments = array_map(function($v){
-        //     $v->profile_img = esc_url( get_avatar_url( $v->user_id ) );
-        //     return $v;
-        // }, $comments);
-
-        echo 'comments <br/><pre>';
-        print_r($voted_users);
-        echo '</pre>';
-
-        echo 'tests <br/><pre>';
-        print_r(get_option( 'tests' ));
-        echo '</pre>'; 
-
-        
-        
-        $voted_users_array = is_array($voted_users) ? array_keys($voted_users) : array();
-        if(!in_array(get_current_user_id(  ), $voted_users_array)) {
-            echo 'yes current user found <br/>';
-        }
-    }
 
     
 
@@ -234,6 +205,7 @@ class IM_Restapi
         $post_id = (int) $data['post_id']; 
         $v_type = $data['v_type'];
         $category = $data['category'];
+        $idea_filter = $data['idea_filter'];
 
 
 
@@ -273,7 +245,7 @@ class IM_Restapi
         
         
         $return_array['user_vote_status'] = in_array(get_current_user_id(  ), $n_voted_users);
-        $return_array['ideas'] = $this->im_get_ideas($category);
+        $return_array['ideas'] = $this->im_get_ideas($category, $idea_filter);
 
         return new WP_REST_Response($return_array, 200);
     }
@@ -402,7 +374,7 @@ class IM_Restapi
         $title = $_POST['title'];
         $content = $_POST['content'];
         $idea_type = $_POST['idea_type'];
-        $file = $_FILES['file'];
+        $file = isset($_FILES['file']) ? $_FILES['file'] : false;
 
         // insert the post and set the category
         $post_id = wp_insert_post(array (
@@ -412,7 +384,7 @@ class IM_Restapi
             'post_status' => 'pending'
         ));
 
-        if($post_id){
+        if($post_id && $file){
             wp_set_post_terms( $post_id, array((int) $idea_type ), IM_Idea::$taxonomy, false );
 
             // upload file to direcotry
@@ -446,9 +418,22 @@ class IM_Restapi
             $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
             wp_update_attachment_metadata( $attach_id, $attach_data );
             update_post_meta( $post_id, 'attachment', $attach_id );
-            update_post_meta( $post_id, 'vote', 0 );
 
             $return_array['msg'] = 'success';
+        }
+
+        if($post_id){
+            update_post_meta( $post_id, 'vote', 0 );
+            $user_data = get_userdata(get_current_user_id(  ));
+
+            // Sent notification mail
+            $to = get_option( 'admin_email', 'ronymaha@gmail.com' );
+            $subject = sprintf(__('New Idia Created by %s', 'idea-management'), $user_data->display_name);
+            $body = sprintf(__('You got a new idea request from %s. Click %shere%s for approve idea.', 'idea-management'), $user_data->display_name, '<a href="'.get_admin_url( ).'post.php?post='.$post_id.'&action=edit">', '</a>');
+            $headers = array('Content-Type: text/html; charset=UTF-8');
+            
+            wp_mail( $to, $subject, $body, $headers );
+
         }
 
         
@@ -463,6 +448,7 @@ class IM_Restapi
     {
 
         $category = $data['category'];
+        $idea_filter = $data['idea_filter'];
 
         $return_array = array();
 
@@ -472,7 +458,7 @@ class IM_Restapi
         ) );
 
         // All ideas
-        $list_ideas = $this->im_get_ideas($category);
+        $list_ideas = $this->im_get_ideas($category, $idea_filter);
 
         $return_array['idea_type'] = $taxonomies;
         $return_array['ideas'] = $list_ideas;
@@ -489,7 +475,7 @@ class IM_Restapi
      * @return  post_array
      * @since   1.0
      */
-    protected function im_get_ideas($category = false){
+    protected function im_get_ideas($category = false, $idea_filter = 'top_rated'){
         $args = array(
             'numberposts' => -1,
             'post_type'   => IM_Idea::$token
@@ -504,6 +490,12 @@ class IM_Restapi
                   'include_children' => true
                 )
             );
+        }
+
+        if($idea_filter == 'top_rated'){
+            $args['orderby'] = 'meta_value_num';
+            $args['meta_key'] = 'vote';
+            $args['order'] = 'DESC'; 
         }
            
         $list_ideas = get_posts( $args );

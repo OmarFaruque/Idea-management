@@ -24,6 +24,9 @@ createApp({
 
     created() {
       this.fetchData()
+      if(!window.idea_object.user_login){
+        window.location.replace(window.idea_object.homepage);
+      }
     }, 
     methods: {
       fetchData() {

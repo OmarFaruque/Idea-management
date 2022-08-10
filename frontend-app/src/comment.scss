@@ -1,3 +1,21 @@
+:global(#attachment){
+  display: flex;
+  :global(.no_attachment){
+    margin-left: auto;
+    margin-right: auto;
+  }
+  >div{
+    position: relative;
+    max-width: 150px;
+    margin-left: auto;
+    a{
+      text-decoration: none;
+    }
+  }
+}
+
+
+
 :global(#comments){
   position: relative;
   .loader{

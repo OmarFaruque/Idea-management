@@ -1,10 +1,35 @@
 .addnewIdea{
-    display: inline-block;
+    display: block;
     margin-top: 15px;
+    span{
+      display: block;
+      width: 100%;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      color: red;
+      margin-top: 20px;
+    }
 }
 
 :global(#im_form){
     position: relative;
+    .counter{
+      display: block; 
+      >div{
+        display: block;
+        text-align: center;
+        /* color: brown; */
+        text-transform: uppercase;
+        font-weight: bold;
+        border: 1px solid rosybrown;
+        border-radius: 5px;
+        padding: 9px;
+        margin-bottom: 30px;
+        background-color: brown;
+        color: white;
+      }
+    }
     .filterwrap{
       >div{
         display: flex;

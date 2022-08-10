@@ -13,7 +13,9 @@
                         </div>
                     <?php endif; ?>
                     <a class="idea_download" href="<?php echo esc_url( $url ); ?>" download>
-                        <span class="dashicons dashicons-download"></span>
+                        <span class="aicon">
+                            <img src="<?php echo  esc_url(plugin_dir_url( IM_Idea::$plugin_file ) . 'assets/img/cloud-computing.png');  ?>" alt="Download" >
+                        </span>
                         <?php _e('Download', 'idea-management'); ?>
                     </a>
             </div>
@@ -52,7 +54,7 @@
     }
     a.idea_download {
         text-decoration: none;
-        display: block;
+        display: flex;
         line-height: initial;
         position: absolute;
         width: 100%;
@@ -61,15 +63,21 @@
         background-color: rgba(0,0,0,0.5);
         padding: 10px;
         color: white;
-        display: none;
+        justify-content: center;
+        /* display: none; */
     }
-    a.idea_download span{
+    a.idea_download span.aicon{
         margin-right: 5px;
+        margin-left: 0;
+    }
+    div#attachment .attachment a.idea_download span.aicon img{
+        max-width: 20px;
     }
 </style>
 
 <script>
     jQuery(document).ready(function($) {
+        $("a.idea_download").slideUp();
         $("#attachment").mouseenter(function() {
             $("a.idea_download").stop().slideDown();
         });

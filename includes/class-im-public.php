@@ -64,9 +64,54 @@ class IM_Public
         add_action( 'idea_single_post', array($this, 'im_post_content'), 30 );
 
         add_action( 'idea_single_post_bottom', array($this, 'im_display_comments'), 20 );
+
+        add_action( 'idea_post_content_after', array($this, 'im_display_attachment_download'), 10 );
+
+        add_filter( 'the_content', array($this, 'im_idea_listing_page_callback'), 1 );
+
+        add_action( 'idea_post_content_before', array($this, 'im_backto_listingpage_button') );
     }
 
 
+    /**
+     * Pring back to list button in single idea page
+     * @access  public
+     * @since   1.0
+     */
+    public function im_backto_listingpage_button(){
+        $options = get_option( 'idea_options' );
+        if(isset($options['idea_listing_page']) && $options['idea_listing_page'] != ''):
+        ?>
+            <a class="btn button" href="<?php echo get_permalink( $options['idea_listing_page'] ); ?>" ><< <?php _e('Back to List page', 'idea-management'); ?></a>
+        <?php 
+        endif;
+    }
+    
+
+    /**
+     * Change page content and pring shortcode for show idea listing
+     * @access  public
+     * @return  html
+     */
+    public function im_idea_listing_page_callback($content){
+        global $post;
+        $options = get_option( 'idea_options' );
+        if(isset($options['idea_listing_page']) && $post->ID == $options['idea_listing_page'])
+            return '[idea-management]';
+        
+        return $content;
+    }
+
+    /**
+     * Download attachment for frontend single idea
+     * @access  public
+     * @return  html
+     * @since   1.0
+     */
+    public function im_display_attachment_download(){
+        global $post;
+        require_once(self::$plugin_path . '/temp/admin-attachment.php');
+    }
 
 
     /**
@@ -93,7 +138,8 @@ class IM_Public
                     'root' => rest_url(self::$token . '/v1/'),
                     'homepage' => home_url( '/' ), 
                     'cpost' => self::$token, 
-                    'post_id' => $post->ID
+                    'post_id' => $post->ID, 
+                    'user_login' => is_user_logged_in(  )
                 )
             );
 		endif;
@@ -186,6 +232,20 @@ class IM_Public
      * @return html 
      */
     public function idea_management_shortcode_callback(){
+
+
+        $options = get_option( 'idea_options' );
+
+        $idea_collection_end_date = isset($options['idea_collection_end_date']) && $options['idea_collection_end_date'] != '' && time() > strtotime($options['idea_collection_end_date']) ? date('jS F, Y', strtotime($options['idea_collection_end_date'])) : false;
+
+        $datediff = false; 
+        if(isset($options['vote_start_date']) && $options['vote_start_date'] != '' && time() < strtotime($options['vote_start_date'])){
+            $datediff = strtotime($options['vote_start_date']) - time();
+            $datediff = round($datediff / (60 * 60 * 24));
+        }
+
+        $voteAllowed = isset($options['vote_start_date']) && isset($options['vote_end_date']) && $options['vote_end_date'] != '' && $options['vote_start_date'] != '' && time() > strtotime($options['vote_start_date']) && time() < strtotime($options['vote_end_date']) ? true : false;
+        
         require_once(self::$plugin_path . '/temp/idea-form.php');
 
         wp_enqueue_style( self::$token.'_css', plugin_dir_url( IM_Idea::$plugin_file ) . 'assets/css/idea.css', array(), IM_Idea::$version, 'all' );
@@ -198,7 +258,12 @@ class IM_Public
                 'api_nonce' => wp_create_nonce('wp_rest'),
                 'root' => rest_url(self::$token . '/v1/'),
                 'homepage' => home_url( '/' ), 
-                'cpost' => self::$token
+                'cpost' => self::$token, 
+                'idea_collection_end_date' => $idea_collection_end_date, 
+                'datediff' => $datediff,
+                'vote_allowed' => $voteAllowed, 
+                'user_login' => is_user_logged_in(  )
+
             )
         );
     }

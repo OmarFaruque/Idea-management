@@ -22,26 +22,33 @@ createApp({
         listing: true, 
         ideas: [], 
         idea_url: window.idea_object.homepage + window.idea_object.cpost, 
+        idea_collection_end_date: window.idea_object.idea_collection_end_date,
         list_by_category: '', 
         loader: false, 
         user_vote_status: false, 
-        idea_filter: 'top_rated'
+        idea_filter: 'top_rated', 
+        show_msg: false, 
+        vote_allowed: window.idea_object.vote_allowed, 
+        datediff: window.idea_object.datediff
       }
     },
 
     created() {
       this.fetchData()
+      if(!window.idea_object.user_login){
+        window.location.replace(window.idea_object.homepage);
+      }
     }, 
     methods: {
 
       //Idea vote process
       voteprocess(id, v_type){
-        console.log('idis: ', id)
         this.loader = true
         let data = {
           post_id: id, 
           v_type: v_type, 
-          category: this.list_by_category
+          category: this.list_by_category, 
+          idea_filter: this.idea_filter
         }
 
         fetchWP.post('idea_vote/', data)
@@ -75,12 +82,12 @@ createApp({
       fetchData() {
         this.loader = true
         let data = {
-          category: this.list_by_category
+          category: this.list_by_category,
+          idea_filter: this.idea_filter
         }
         fetchWP.post('getconfig/', data)
             .then(
                 (json) => {
-                    console.log('json: ', json)
                     this.idea_types = json.idea_type
                     this.ideas = json.ideas
                     this.loader = false
@@ -97,6 +104,7 @@ createApp({
 
 
       formSubmit(e=false){
+        this.loader = true
         this.title = this.$refs.title.value
         this.idea_type = this.$refs.idea_type.value
         this.content = this.$refs.content.value
@@ -107,7 +115,11 @@ createApp({
         formData.append('title', this.title);
         formData.append('idea_type', this.idea_type);
         formData.append('content', this.content);
-        formData.append('file', this.file, this.file.name);
+        
+
+        if(typeof this.file != 'undefined'){
+          formData.append('file', this.file, this.file.name);
+        }
 
         let headers = {
           'Content-Type': 'multipart/form-data',
@@ -118,7 +130,16 @@ createApp({
         axios.post(window.idea_object.root + 'create/', formData, {headers: headers})
         .then(
           (response) => {
-            console.log('response: ', response)
+            this.title = ''
+            this.content = ''
+            this.file = ''
+            this.loader = false
+            this.show_msg = true
+
+            setTimeout(function(){
+              this.show_msg = false
+             }, 500);
+            
           })
           .catch(function(error){
             console.log('error: ', error)
